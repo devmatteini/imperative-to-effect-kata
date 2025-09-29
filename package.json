@@ -1,0 +1,30 @@
+{
+  "name": "imperative-to-effect-kata",
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "pnpm@9.15.4",
+  "license": "MIT",
+  "description": "Refactoring kata to practice the conversion of an imperative codebase to a functional one, using Effect TypeScript library.",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "typecheck:w": "pnpm run typecheck --watch",
+    "test": "vitest run",
+    "test:w": "vitest watch",
+    "format": "prettier -w \"src/**/*.{ts,js,mjs}\""
+  },
+  "dependencies": {
+    "effect": "3.17.14",
+    "@effect/platform": "0.91.1",
+    "@effect/platform-node": "0.97.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.7",
+    "typescript": "5.9.2",
+    "prettier": "3.6.2",
+    "tsx": "4.20.6",
+    "vitest": "3.2.4",
+    "@effect/language-service": "0.41.1",
+    "@effect/vitest": "0.25.1"
+  }
+}
