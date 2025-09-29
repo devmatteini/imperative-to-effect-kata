@@ -1,0 +1,30 @@
+[
+  {
+    "src": "/team-photos/processed/IMG-20220416-WA0018.jpg.webp",
+    "width": 1500,
+    "height": 844,
+    "format": "webp",
+    "orientation": 1
+  },
+  {
+    "src": "/team-photos/processed/IMG_20220922_184538749.jpg.webp",
+    "width": 1500,
+    "height": 1998,
+    "format": "webp",
+    "orientation": 1
+  },
+  {
+    "src": "/team-photos/processed/IMG_20221008_132350437_HDR.jpg.webp",
+    "width": 1500,
+    "height": 1125,
+    "format": "webp",
+    "orientation": 1
+  },
+  {
+    "src": "/team-photos/processed/IMG_20221021_163909.jpg.webp",
+    "width": 1500,
+    "height": 844,
+    "format": "webp",
+    "orientation": 1
+  }
+]

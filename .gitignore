@@ -25,3 +25,6 @@ yarn-error.log*
 .build/
 build/
 dist/
+
+# generated photos
+src/public/team-photos/processed/*.webp
