@@ -28,8 +28,10 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
         const results = yield* pipe(
             sourceFiles,
             Array.filter((file) => imageTypesRegex.test(file)),
-            Effect.forEach((file) =>
-                Effect.promise(() => processOne(path.join(sourceDir, file), outputDirAbsolute)),
+            Effect.forEach(
+                (file) =>
+                    Effect.promise(() => processOne(path.join(sourceDir, file), outputDirAbsolute)),
+                { concurrency: 5 },
             ),
         )
 
