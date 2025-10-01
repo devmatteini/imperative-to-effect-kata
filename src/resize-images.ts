@@ -13,7 +13,5 @@ const jsonOutputFile = "images.json"
 
 export const resizeImages = Effect.gen(function* () {
     yield* compressImages(sourceDirAbsolute, compressOutputDir)
-    yield* Effect.promise(() =>
-        reportProcessedImages(processedDirAbsolute, jsonOutputFile, finalImageSrcBaseUrl),
-    )
+    yield* reportProcessedImages(processedDirAbsolute, jsonOutputFile, finalImageSrcBaseUrl)
 })

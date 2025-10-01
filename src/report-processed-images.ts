@@ -2,8 +2,20 @@ import { mkdirSync, readdirSync, writeFileSync } from "node:fs"
 import * as path from "node:path"
 import sharp from "sharp"
 import { imageTypesRegex } from "./images.js"
+import * as Effect from "effect/Effect"
 
-export const reportProcessedImages = async (
+export const reportProcessedImages = (
+    sourceDir: string,
+    outputFile: string,
+    finalImageSrcBaseUrl: string,
+) =>
+    Effect.gen(function* () {
+        yield* Effect.promise(() =>
+            reportProcessedImagesInner(sourceDir, outputFile, finalImageSrcBaseUrl),
+        )
+    })
+
+const reportProcessedImagesInner = async (
     sourceDir: string,
     outputFile: string,
     finalImageSrcBaseUrl: string,
