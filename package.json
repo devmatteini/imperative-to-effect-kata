@@ -7,6 +7,7 @@
   "description": "Refactoring kata to practice the conversion of an imperative codebase to a functional one, using Effect TypeScript library.",
   "scripts": {
     "start": "tsx src/index.ts",
+    "benchmark": "hyperfine -r 5 'pnpm start'",
     "typecheck": "tsc --noEmit",
     "typecheck:w": "pnpm run typecheck --watch",
     "test": "vitest run",
