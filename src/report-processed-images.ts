@@ -31,16 +31,12 @@ export const reportProcessedImages = (
             ),
         )
 
-        yield* Effect.promise(() => reportProcessedImagesInner(outputFileAbsolute, results))
+        console.log(`\nWriting results to ${outputFileAbsolute}\n`)
+
+        writeOutputFile(outputFileAbsolute, results)
+
+        console.log(`\nDONE\n`)
     })
-
-const reportProcessedImagesInner = async (outputFileAbsolute: string, results: unknown[]) => {
-    console.log(`\nWriting results to ${outputFileAbsolute}\n`)
-
-    writeOutputFile(outputFileAbsolute, results)
-
-    console.log(`\nDONE\n`)
-}
 
 const processOne = async (file: string, finalImageSrcBaseUrl: string) => {
     const metadata = await sharp(file).metadata()
