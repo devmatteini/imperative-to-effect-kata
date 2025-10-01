@@ -1,4 +1,3 @@
-import { copyFileSync, statSync } from "node:fs"
 import * as path from "node:path"
 import sharp from "sharp"
 import { imageTypesRegex } from "./images.js"
@@ -39,26 +38,25 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
 
 const processOne = (inputFile: string, outputDir: string) =>
     Effect.gen(function* () {
-        return yield* Effect.promise(() => processOneInner(inputFile, outputDir))
+        const fs = yield* FileSystem.FileSystem
+        const fileName = path.basename(inputFile)
+        const outputFile = path.join(outputDir, `${fileName}.webp`)
+
+        const metadata = yield* Effect.promise(() => sharp(inputFile).metadata())
+        const stat = yield* fs.stat(inputFile)
+        const sizeInKb = Number(stat.size) / 1024
+
+        if (sizeInKb < 50 || !metadata.width || metadata.width < WIDTH_THRESHOLD) {
+            yield* fs.copyFile(inputFile, outputFile)
+            return { name: outputFile }
+        } else {
+            const info = yield* Effect.promise(() =>
+                sharp(inputFile)
+                    .resize({ width: WIDTH_THRESHOLD, withoutEnlargement: true })
+                    .withMetadata()
+                    .webp({ lossless: false, quality: 80 })
+                    .toFile(outputFile),
+            )
+            return { name: outputFile, ...info }
+        }
     })
-
-const processOneInner = async (inputFile: string, outputDir: string) => {
-    const fileName = path.basename(inputFile)
-    const outputFile = path.join(outputDir, `${fileName}.webp`)
-
-    const metadata = await sharp(inputFile).metadata()
-    const stat = statSync(inputFile)
-    const sizeInKb = stat.size / 1024
-
-    if (sizeInKb < 50 || !metadata.width || metadata.width < WIDTH_THRESHOLD) {
-        copyFileSync(inputFile, outputFile)
-        return { name: outputFile }
-    } else {
-        const info = await sharp(inputFile)
-            .resize({ width: WIDTH_THRESHOLD, withoutEnlargement: true })
-            .withMetadata()
-            .webp({ lossless: false, quality: 80 })
-            .toFile(outputFile)
-        return { name: outputFile, ...info }
-    }
-}
