@@ -1,10 +1,10 @@
 import * as path from "node:path"
-import sharp from "sharp"
 import { imageTypesRegex } from "./images.js"
 import * as Effect from "effect/Effect"
 import { FileSystem } from "@effect/platform"
 import * as Array from "effect/Array"
 import { pipe } from "effect"
+import { Image } from "./image.js"
 
 const WIDTH_THRESHOLD = 1500
 
@@ -39,10 +39,11 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
 const processOne = (inputFile: string, outputDir: string) =>
     Effect.gen(function* () {
         const fs = yield* FileSystem.FileSystem
+        const image = yield* Image
         const fileName = path.basename(inputFile)
         const outputFile = path.join(outputDir, `${fileName}.webp`)
 
-        const metadata = yield* Effect.promise(() => sharp(inputFile).metadata())
+        const metadata = yield* image.metadata(inputFile)
         const stat = yield* fs.stat(inputFile)
         const sizeInKb = Number(stat.size) / 1024
 
@@ -50,13 +51,7 @@ const processOne = (inputFile: string, outputDir: string) =>
             yield* fs.copyFile(inputFile, outputFile)
             return { name: outputFile }
         } else {
-            const info = yield* Effect.promise(() =>
-                sharp(inputFile)
-                    .resize({ width: WIDTH_THRESHOLD, withoutEnlargement: true })
-                    .withMetadata()
-                    .webp({ lossless: false, quality: 80 })
-                    .toFile(outputFile),
-            )
+            const info = yield* image.resize(inputFile, outputFile, WIDTH_THRESHOLD)
             return { name: outputFile, ...info }
         }
     })
