@@ -1,7 +1,7 @@
 import * as Context from "effect/Context"
 import { Effect } from "effect"
 
-type ImageMetadata = {
+export type ImageMetadata = {
     width: number
     height: number
     format: string

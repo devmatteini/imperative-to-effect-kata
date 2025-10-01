@@ -1,11 +1,10 @@
-import { mkdirSync, writeFileSync } from "node:fs"
 import * as path from "node:path"
 import { imageTypesRegex } from "./images.js"
 import * as Effect from "effect/Effect"
 import { FileSystem } from "@effect/platform"
 import { pipe } from "effect"
 import * as Array from "effect/Array"
-import { Image } from "./image.js"
+import { Image, ImageMetadata } from "./image.js"
 
 export const reportProcessedImages = (
     sourceDir: string,
@@ -29,7 +28,7 @@ export const reportProcessedImages = (
 
         console.log(`\nWriting results to ${outputFileAbsolute}\n`)
 
-        writeOutputFile(outputFileAbsolute, results)
+        yield* writeOutputFile(outputFileAbsolute, results)
 
         console.log(`\nDONE\n`)
     })
@@ -48,8 +47,12 @@ const processOne = (file: string, finalImageSrcBaseUrl: string) =>
         }
     })
 
-const writeOutputFile = (outputFile: string, content: unknown[]) => {
-    const outputFileDir = path.dirname(outputFile)
-    mkdirSync(outputFileDir, { recursive: true })
-    writeFileSync(outputFile, JSON.stringify(content, null, 2), {})
-}
+const writeOutputFile = (outputFile: string, content: ImageMetadata[]) =>
+    Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem
+
+        const outputFileDir = path.dirname(outputFile)
+
+        yield* fs.makeDirectory(outputFileDir, { recursive: true })
+        yield* fs.writeFileString(outputFile, JSON.stringify(content, null, 2), {})
+    })
