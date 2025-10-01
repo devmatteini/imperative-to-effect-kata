@@ -3,6 +3,9 @@ import { Effect } from "effect"
 
 type ImageMetadata = {
     width: number
+    height: number
+    format: string
+    orientation?: number | undefined
 }
 
 type ImageService = {
