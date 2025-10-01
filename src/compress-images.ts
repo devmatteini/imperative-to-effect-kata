@@ -28,18 +28,21 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
         const results = yield* pipe(
             sourceFiles,
             Array.filter((file) => imageTypesRegex.test(file)),
-            Effect.forEach(
-                (file) =>
-                    Effect.promise(() => processOne(path.join(sourceDir, file), outputDirAbsolute)),
-                { concurrency: 5 },
-            ),
+            Effect.forEach((file) => processOne(path.join(sourceDir, file), outputDirAbsolute), {
+                concurrency: 5,
+            }),
         )
 
         console.log(`\nProcessed ${results.length} images \n`)
         console.log(`\nDONE\n`)
     })
 
-const processOne = async (inputFile: string, outputDir: string) => {
+const processOne = (inputFile: string, outputDir: string) =>
+    Effect.gen(function* () {
+        return yield* Effect.promise(() => processOneInner(inputFile, outputDir))
+    })
+
+const processOneInner = async (inputFile: string, outputDir: string) => {
     const fileName = path.basename(inputFile)
     const outputFile = path.join(outputDir, `${fileName}.webp`)
 
