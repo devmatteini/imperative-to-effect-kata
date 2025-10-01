@@ -1,3 +1,4 @@
+import * as Effect from "effect/Effect"
 import { compressImages } from "./compress-images.js"
 import { reportProcessedImages } from "./report-processed-images.js"
 import * as path from "node:path"
@@ -10,7 +11,9 @@ const processedDirAbsolute = path.join(sourceDirAbsolute, compressOutputDir)
 const finalImageSrcBaseUrl = `/team-photos/${compressOutputDir}`
 const jsonOutputFile = "images.json"
 
-export const resizeImages = async () => {
-    await compressImages(sourceDirAbsolute, compressOutputDir)
-    await reportProcessedImages(processedDirAbsolute, jsonOutputFile, finalImageSrcBaseUrl)
-}
+export const resizeImages = Effect.gen(function* () {
+    yield* Effect.promise(() => compressImages(sourceDirAbsolute, compressOutputDir))
+    yield* Effect.promise(() =>
+        reportProcessedImages(processedDirAbsolute, jsonOutputFile, finalImageSrcBaseUrl),
+    )
+})

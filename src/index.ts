@@ -1,7 +1,7 @@
 import * as Effect from "effect/Effect"
 import { resizeImages } from "./resize-images.js"
 
-const program = Effect.promise(() => resizeImages())
+const program = resizeImages
 
 Effect.runPromise(program)
     .then(() => process.exit(0))
