@@ -3,20 +3,23 @@ import * as path from "node:path"
 import sharp from "sharp"
 import { imageTypesRegex } from "./images.js"
 import * as Effect from "effect/Effect"
+import { FileSystem } from "@effect/platform"
 
 const WIDTH_THRESHOLD = 1500
 
 export const compressImages = (sourceDir: string, outputDir: string) =>
     Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem
+        const sourceDirExists = yield* fs.exists(sourceDir)
+        if (!sourceDirExists) {
+            console.error(`\nSource directory ${sourceDir} does not exist\n`)
+            return yield* Effect.dieMessage("Source directory does not exist")
+        }
+
         yield* Effect.promise(() => compressImagesInner(sourceDir, outputDir))
     })
 
 const compressImagesInner = async (sourceDir: string, outputDir: string) => {
-    if (!existsSync(sourceDir)) {
-        console.error(`\nSource directory ${sourceDir} does not exist\n`)
-        process.exit(1)
-    }
-
     console.log(`\nReading images from ${sourceDir}\n`)
 
     const outputDirAbsolute = path.join(sourceDir, outputDir)
