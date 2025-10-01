@@ -10,20 +10,20 @@ export const reportProcessedImages = (
     finalImageSrcBaseUrl: string,
 ) =>
     Effect.gen(function* () {
+        console.log(`\nReading images from ${sourceDir}\n`)
+
+        const outputFileAbsolute = path.join(sourceDir, outputFile)
+
         yield* Effect.promise(() =>
-            reportProcessedImagesInner(sourceDir, outputFile, finalImageSrcBaseUrl),
+            reportProcessedImagesInner(sourceDir, outputFileAbsolute, finalImageSrcBaseUrl),
         )
     })
 
 const reportProcessedImagesInner = async (
     sourceDir: string,
-    outputFile: string,
+    outputFileAbsolute: string,
     finalImageSrcBaseUrl: string,
 ) => {
-    console.log(`\nReading images from ${sourceDir}\n`)
-
-    const outputFileAbsolute = path.join(sourceDir, outputFile)
-
     const tasks = readdirSync(sourceDir)
         // keep-line
         .filter((file) => imageTypesRegex.test(file))
