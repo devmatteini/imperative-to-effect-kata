@@ -40,17 +40,26 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
 
 const processOne = (inputFile: string, outputDir: string) =>
     Effect.gen(function* () {
-        return yield* Effect.promise(() => processOneInner(inputFile, outputDir))
+        const fs = yield* FileSystem.FileSystem
+
+        const fileName = path.basename(inputFile)
+        const outputFile = path.join(outputDir, `${fileName}.webp`)
+
+        const metadata = yield* Effect.promise(() => sharp(inputFile).metadata())
+        const stat = yield* fs.stat(inputFile)
+        const sizeInKb = Number(stat.size) / 1024
+
+        return yield* Effect.promise(() =>
+            processOneInner(inputFile, sizeInKb, outputFile, metadata),
+        )
     })
 
-const processOneInner = async (inputFile: string, outputDir: string) => {
-    const fileName = path.basename(inputFile)
-    const outputFile = path.join(outputDir, `${fileName}.webp`)
-
-    const metadata = await sharp(inputFile).metadata()
-    const stat = statSync(inputFile)
-    const sizeInKb = stat.size / 1024
-
+const processOneInner = async (
+    inputFile: string,
+    sizeInKb: number,
+    outputFile: string,
+    metadata: sharp.Metadata,
+) => {
     if (sizeInKb < 50 || !metadata.width || metadata.width < WIDTH_THRESHOLD) {
         copyFileSync(inputFile, outputFile)
         return { name: outputFile }
