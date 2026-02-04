@@ -2,10 +2,16 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } fr
 import * as path from "node:path"
 import sharp from "sharp"
 import { imageTypesRegex } from "./images.js"
+import { Effect } from "effect"
 
 const WIDTH_THRESHOLD = 1500
 
-export const compressImages = async (sourceDir: string, outputDir: string) => {
+export const compressImages = (sourceDir: string, outputDir: string) =>
+    Effect.gen(function* () {
+        yield* Effect.promise(() => compressImagesInner(sourceDir, outputDir))
+    })
+
+const compressImagesInner = async (sourceDir: string, outputDir: string) => {
     if (!existsSync(sourceDir)) {
         console.error(`\nSource directory ${sourceDir} does not exist\n`)
         process.exit(1)
