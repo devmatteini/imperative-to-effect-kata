@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs"
+import { copyFileSync, readdirSync, statSync } from "node:fs"
 import * as path from "node:path"
 import sharp from "sharp"
 import { imageTypesRegex } from "./images.js"
@@ -20,20 +20,20 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
             return yield* new SourceDirNotExists({ path: sourceDir })
         }
 
-        yield* Effect.promise(() => compressImagesInner(sourceDir, outputDir))
+        console.log(`\nReading images from ${sourceDir}\n`)
+
+        const outputDirAbsolute = path.join(sourceDir, outputDir)
+        yield* fs.remove(outputDirAbsolute, { recursive: true, force: true })
+        yield* fs.makeDirectory(outputDirAbsolute, { recursive: true })
+
+        yield* Effect.promise(() => compressImagesInner(sourceDir, outputDirAbsolute))
     })
 
 const compressImagesInner = async (sourceDir: string, outputDir: string) => {
-    console.log(`\nReading images from ${sourceDir}\n`)
-
-    const outputDirAbsolute = path.join(sourceDir, outputDir)
-    rmSync(outputDirAbsolute, { recursive: true, force: true })
-    mkdirSync(outputDirAbsolute, { recursive: true })
-
     const tasks = readdirSync(sourceDir)
         // keep-line
         .filter((file) => imageTypesRegex.test(file))
-        .map((file) => processOne(path.join(sourceDir, file), outputDirAbsolute))
+        .map((file) => processOne(path.join(sourceDir, file), outputDir))
     const results = await Promise.all(tasks)
 
     console.log(`\nProcessed ${results.length} images \n`)
