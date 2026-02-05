@@ -17,7 +17,6 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
 
         const sourceDirExists = yield* fs.exists(sourceDir)
         if (!sourceDirExists) {
-            console.error(`\nSource directory ${sourceDir} does not exist\n`)
             return yield* new SourceDirNotExistsError({ path: sourceDir })
         }
 
