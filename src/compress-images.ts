@@ -32,9 +32,7 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
         const tasks = pipe(
             files,
             Array.filter((file) => imageTypesRegex.test(file)),
-            Array.map((file) =>
-                Effect.promise(() => processOne(path.join(sourceDir, file), outputDirAbsolute)),
-            ),
+            Array.map((file) => processOne(path.join(sourceDir, file), outputDirAbsolute)),
         )
         const results = yield* Effect.all(tasks, { concurrency: 5 })
 
@@ -42,14 +40,28 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
         console.log(`\nDONE\n`)
     })
 
-const processOne = async (inputFile: string, outputDir: string) => {
-    const fileName = path.basename(inputFile)
-    const outputFile = path.join(outputDir, `${fileName}.webp`)
+const processOne = (inputFile: string, outputDir: string) =>
+    Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem
 
-    const metadata = await sharp(inputFile).metadata()
-    const stat = statSync(inputFile)
-    const sizeInKb = stat.size / 1024
+        const fileName = path.basename(inputFile)
+        const outputFile = path.join(outputDir, `${fileName}.webp`)
 
+        const metadata = yield* Effect.promise(() => sharp(inputFile).metadata())
+        const stat = yield* fs.stat(inputFile)
+        const sizeInKb = Number(stat.size) / 1024
+
+        return yield* Effect.promise(() =>
+            processOneInner(inputFile, sizeInKb, metadata, outputFile),
+        )
+    })
+
+const processOneInner = async (
+    inputFile: string,
+    sizeInKb: number,
+    metadata: sharp.Metadata,
+    outputFile: string,
+) => {
     if (sizeInKb < 50 || !metadata.width || metadata.width < WIDTH_THRESHOLD) {
         copyFileSync(inputFile, outputFile)
         return { name: outputFile }
