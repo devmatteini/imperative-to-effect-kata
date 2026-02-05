@@ -1,8 +1,9 @@
 import { resizeImages } from "./resize-images.js"
-import { Console, Effect, Match, pipe } from "effect"
+import { Console, Effect, Layer, Match, pipe } from "effect"
 import { NodeFileSystem } from "@effect/platform-node"
+import { ImageSharpLive } from "./image-sharp.js"
 
-const MainLive = NodeFileSystem.layer
+const MainLive = Layer.mergeAll(NodeFileSystem.layer, ImageSharpLive)
 
 const program = pipe(
     resizeImages,

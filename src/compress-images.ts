@@ -1,9 +1,8 @@
-import { copyFileSync, readdirSync, statSync } from "node:fs"
 import * as path from "node:path"
-import sharp from "sharp"
 import { imageTypesRegex } from "./images.js"
-import { Data, Effect, pipe, Array } from "effect"
+import { Array, Data, Effect, pipe } from "effect"
 import { FileSystem } from "@effect/platform"
+import * as Context from "effect/Context"
 
 const WIDTH_THRESHOLD = 1500
 
@@ -40,14 +39,21 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
         console.log(`\nDONE\n`)
     })
 
+type ImageService = {
+    metadata: (inputFile: string) => Effect.Effect<{ width: number }>
+    optimize: (inputFile: string, outputFile: string, maxWidth: number) => Effect.Effect<void>
+}
+export class Image extends Context.Tag("Image")<Image, ImageService>() {}
+
 const processOne = (inputFile: string, outputDir: string) =>
     Effect.gen(function* () {
         const fs = yield* FileSystem.FileSystem
+        const image = yield* Image
 
         const fileName = path.basename(inputFile)
         const outputFile = path.join(outputDir, `${fileName}.webp`)
 
-        const metadata = yield* Effect.promise(() => sharp(inputFile).metadata())
+        const metadata = yield* image.metadata(inputFile)
         const stat = yield* fs.stat(inputFile)
         const sizeInKb = Number(stat.size) / 1024
 
@@ -56,12 +62,6 @@ const processOne = (inputFile: string, outputDir: string) =>
             return { name: outputFile }
         }
 
-        const info = yield* Effect.promise(() =>
-            sharp(inputFile)
-                .resize({ width: WIDTH_THRESHOLD, withoutEnlargement: true })
-                .withMetadata()
-                .webp({ lossless: false, quality: 80 })
-                .toFile(outputFile),
-        )
-        return { name: outputFile, ...info }
+        yield* image.optimize(inputFile, outputFile, WIDTH_THRESHOLD)
+        return { name: outputFile }
     })
