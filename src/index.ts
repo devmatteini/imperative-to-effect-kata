@@ -1,7 +1,10 @@
 import { resizeImages } from "./resize-images.js"
-import { Effect } from "effect"
+import { Effect, pipe } from "effect"
+import { NodeFileSystem } from "@effect/platform-node"
 
-const program = resizeImages
+const MainLive = NodeFileSystem.layer
+
+const program = pipe(resizeImages, Effect.provide(MainLive))
 
 Effect.runPromise(program)
     .then(() => process.exit(0))
