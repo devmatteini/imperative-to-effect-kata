@@ -36,7 +36,7 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
                 Effect.promise(() => processOne(path.join(sourceDir, file), outputDirAbsolute)),
             ),
         )
-        const results = yield* Effect.all(tasks)
+        const results = yield* Effect.all(tasks, { concurrency: 5 })
 
         console.log(`\nProcessed ${results.length} images \n`)
         console.log(`\nDONE\n`)
