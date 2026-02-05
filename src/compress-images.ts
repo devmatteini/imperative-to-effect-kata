@@ -2,10 +2,14 @@ import { copyFileSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs"
 import * as path from "node:path"
 import sharp from "sharp"
 import { imageTypesRegex } from "./images.js"
-import { Effect } from "effect"
+import { Data, Effect } from "effect"
 import { FileSystem } from "@effect/platform"
 
 const WIDTH_THRESHOLD = 1500
+
+export class SourceDirNotExistsError extends Data.TaggedError("SourceDirNotExistsError")<{
+    path: string
+}> {}
 
 export const compressImages = (sourceDir: string, outputDir: string) =>
     Effect.gen(function* () {
@@ -14,7 +18,7 @@ export const compressImages = (sourceDir: string, outputDir: string) =>
         const sourceDirExists = yield* fs.exists(sourceDir)
         if (!sourceDirExists) {
             console.error(`\nSource directory ${sourceDir} does not exist\n`)
-            return yield* Effect.dieMessage("Source directory does not exist")
+            return yield* new SourceDirNotExistsError({ path: sourceDir })
         }
 
         yield* Effect.promise(() => compressImagesInner(sourceDir, outputDir))
