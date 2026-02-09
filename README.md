@@ -80,4 +80,4 @@ A list of suggestions you can do during this kata:
 ## Solutions
 
 - [October 2025](https://github.com/devmatteini/imperative-to-effect-kata/tree/solution)
-- [Febraury 2026](https://github.com/devmatteini/imperative-to-effect-kata/tree/solution-2026-02)
+- [February 2026](https://github.com/devmatteini/imperative-to-effect-kata/tree/solution-2026-02)
