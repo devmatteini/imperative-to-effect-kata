@@ -3,7 +3,7 @@ import { reportProcessedImages } from "./report-processed-images.js"
 import * as path from "node:path"
 
 const sourceDirRelative = "./public/team-photos"
-const sourceDirAbsolute = new URL(sourceDirRelative, import.meta.url).pathname
+const sourceDirAbsolute = path.join(import.meta.dirname, sourceDirRelative)
 const compressOutputDir = "processed"
 
 const processedDirAbsolute = path.join(sourceDirAbsolute, compressOutputDir)
