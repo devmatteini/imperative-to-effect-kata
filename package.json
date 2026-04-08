@@ -2,7 +2,7 @@
   "name": "imperative-to-effect-kata",
   "version": "0.0.0",
   "type": "module",
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.30.3",
   "license": "MIT",
   "description": "Refactoring kata to practice the conversion of an imperative codebase to a functional one, using Effect TypeScript library.",
   "scripts": {
