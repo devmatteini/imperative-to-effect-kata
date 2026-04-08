@@ -15,12 +15,12 @@
     "format": "prettier -w \"src/**/*.{ts,js,mjs}\""
   },
   "dependencies": {
-    "effect": "3.19.15",
-    "@effect/platform": "0.94.2",
-    "@effect/platform-node": "0.104.1",
-    "@effect/cluster": "^0.56.1",
-    "@effect/sql": "^0.49.0",
-    "@effect/rpc": "^0.73.0",
+    "effect": "3.21.0",
+    "@effect/platform": "0.96.0",
+    "@effect/platform-node": "0.106.0",
+    "@effect/cluster": "0.58.0",
+    "@effect/sql": "0.51.0",
+    "@effect/rpc": "0.75.0",
     "sharp": "0.34.4"
   },
   "devDependencies": {
@@ -29,7 +29,7 @@
     "prettier": "3.6.2",
     "tsx": "4.20.6",
     "vitest": "3.2.4",
-    "@effect/language-service": "0.72.0",
-    "@effect/vitest": "0.27.0"
+    "@effect/language-service": "0.84.3",
+    "@effect/vitest": "0.29.0"
   }
 }
