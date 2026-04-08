@@ -11,7 +11,7 @@
       "node"
     ],
     "lib": [
-      "ES2022"
+      "ES2024"
     ],
     "isolatedModules": true,
     "sourceMap": true,
@@ -23,7 +23,7 @@
     "noImplicitThis": true,
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
-    "target": "ES2022",
+    "target": "ES2024",
     "module": "NodeNext",
     "incremental": true,
     "removeComments": true,

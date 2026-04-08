@@ -31,7 +31,7 @@ and in this case a library, into a production application without breaking it.
 
 ## Getting Started
 
-Install node 22+ and `pnpm` package manager.
+Install node 24+ and `pnpm` package manager.
 
 Install dependencies:
 
