@@ -1,5 +1,5 @@
-import { compressImages } from "./compress-images.js"
-import { reportProcessedImages } from "./report-processed-images.js"
+import { compressImages } from "./compress-images.ts"
+import { reportProcessedImages } from "./report-processed-images.ts"
 import * as path from "node:path"
 
 const sourceDirRelative = "./public/team-photos"

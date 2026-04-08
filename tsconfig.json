@@ -27,6 +27,10 @@
     "module": "NodeNext",
     "incremental": true,
     "removeComments": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "plugins": [
       {
         "name": "@effect/language-service"

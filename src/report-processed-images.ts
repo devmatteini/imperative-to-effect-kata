@@ -1,7 +1,7 @@
 import { mkdirSync, readdirSync, writeFileSync } from "node:fs"
 import * as path from "node:path"
 import sharp from "sharp"
-import { imageTypesRegex } from "./images.js"
+import { imageTypesRegex } from "./images.ts"
 
 export const reportProcessedImages = async (
     sourceDir: string,

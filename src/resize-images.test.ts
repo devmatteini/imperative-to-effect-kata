@@ -1,6 +1,6 @@
 import { test, expect } from "vitest"
 import { readFile } from "node:fs/promises"
-import { resizeImages } from "./resize-images.js"
+import { resizeImages } from "./resize-images.ts"
 
 test("end to end", { timeout: 2_000 }, async () => {
     await resizeImages()

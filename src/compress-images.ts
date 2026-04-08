@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs"
 import * as path from "node:path"
 import sharp from "sharp"
-import { imageTypesRegex } from "./images.js"
+import { imageTypesRegex } from "./images.ts"
 
 const WIDTH_THRESHOLD = 1500
 

@@ -1,4 +1,4 @@
-import { resizeImages } from "./resize-images.js"
+import { resizeImages } from "./resize-images.ts"
 
 resizeImages()
     .then(() => process.exit(0))
